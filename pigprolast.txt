@@ -1,0 +1,17 @@
+1. A = load '/home/cloudera/consumer-complaints' USING PIGSTORAGE ',';
+B = Foreach A generate $13 as 'Timely response';
+C = Filter B by 'Timely response'== 'Yes';
+D = foreach C generate count(C);
+
+2. selected = foreach A generate $0 as Date1, $11 as Date2;
+filtered = filter selected by Date1 == Date2;
+counted = foreach filtered count(*);
+
+3. grouped = group A by $7 as company;
+newcount = foreach grouped generate group, count(grouped)
+ordered = order newcount by company;
+limited = limit ordered 5;
+
+4. complaintes = foreach A generate $1 as product, GetYear($0) as year;
+filteredc = filter complaintes by product == “Debt collection”, year 2015;
+countedc =  oreach filteredc count(*);
